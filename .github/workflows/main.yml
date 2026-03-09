@@ -19,7 +19,8 @@ jobs:
       # PASO 3: Instalar librerías
       - name: Instalar herramientas
         run: |
-          pip install papermill jupyter google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas
+              pip install papermill jupyter ipykernel google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas
+              python -m ipykernel install --user --name python3 --display-name "Python 3"
 
       # PASO 4: Ejecutar el notebook
       - name: Ejecutar Notebook
