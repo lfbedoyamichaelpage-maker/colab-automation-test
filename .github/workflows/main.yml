@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 # <- ESTO ES VITAL. Descarga los archivos a la máquina.
 
       - name: Configurar Python
         uses: actions/setup-python@v4
@@ -16,13 +16,16 @@ jobs:
 
       - name: Instalar herramientas
         run: |
-          pip install papermill jupyter google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+          pip install papermill jupyter google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas
 
       - name: Ejecutar Notebook
         env:
           GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT }}
         run: |
-          # Este comando crea un archivo temporal con la llave para que el notebook la lea
           echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > secret_key.json
           export GOOGLE_APPLICATION_CREDENTIALS=secret_key.json
+          
+          echo "Archivos en la carpeta actual antes de ejecutar:"
+          ls -la # Esto imprimirá en los logs qué archivos hay realmente
+          
           papermill test_automation.ipynb salida.ipynb
