@@ -1,0 +1,28 @@
+name: Test Automatizacion Colab
+on:
+  workflow_dispatch: # Esto nos permite darle al botón de "Play" manualmente
+
+jobs:
+  ejecutar-notebook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Instalar herramientas
+        run: |
+          pip install papermill jupyter google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+
+      - name: Ejecutar Notebook
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT }}
+        run: |
+          # Este comando crea un archivo temporal con la llave para que el notebook la lea
+          echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > secret_key.json
+          export GOOGLE_APPLICATION_CREDENTIALS=secret_key.json
+          papermill test_automation.ipynb salida.ipynb
