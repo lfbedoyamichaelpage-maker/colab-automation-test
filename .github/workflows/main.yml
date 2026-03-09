@@ -1,31 +1,39 @@
 name: Test Automatizacion Colab
 on:
-  workflow_dispatch: # Esto nos permite darle al botón de "Play" manualmente
+  workflow_dispatch:
 
 jobs:
   ejecutar-notebook:
     runs-on: ubuntu-latest
     steps:
+      # PASO 1: Descargar los archivos del repo a la máquina virtual (¡ESTO ES LO QUE FALTA!)
       - name: Checkout del código
-        uses: actions/checkout@v3 # <- ESTO ES VITAL. Descarga los archivos a la máquina.
+        uses: actions/checkout@v4
 
+      # PASO 2: Instalar Python
       - name: Configurar Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
+      # PASO 3: Instalar librerías
       - name: Instalar herramientas
         run: |
           pip install papermill jupyter google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas
 
+      # PASO 4: Ejecutar el notebook
       - name: Ejecutar Notebook
         env:
           GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.DRIVE_SERVICE_ACCOUNT }}
         run: |
+          # 1. Crear el archivo de credenciales
           echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > secret_key.json
           export GOOGLE_APPLICATION_CREDENTIALS=secret_key.json
           
-          echo "Archivos en la carpeta actual antes de ejecutar:"
-          ls -la # Esto imprimirá en los logs qué archivos hay realmente
+          # 2. Imprimir los archivos para comprobar que el Checkout funcionó
+          echo "=== ARCHIVOS EN LA MÁQUINA VIRTUAL ==="
+          ls -la
+          echo "======================================"
           
+          # 3. Ejecutar Papermill
           papermill test_automation.ipynb salida.ipynb
