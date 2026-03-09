@@ -36,4 +36,4 @@ jobs:
           echo "======================================"
           
           # 3. Ejecutar Papermill
-          papermill test_automation.ipynb salida.ipynb
+          papermill test_automation.ipynb salida.ipynb -k python3
