@@ -1,9 +1,6 @@
 name: Test Automatizacion Colab
 on:
   workflow_dispatch: # Esto mantiene el botón de Play manual que ya usas
-  schedule:
-    # Ejecutar a las 6:30 AM (Hora de Colombia)
-    - cron: '30 11 * * *' 
 
 jobs:
   ejecutar-notebook:
